@@ -1,0 +1,55 @@
+namespace DistanceNS;
+
+public sealed class Distance(double value, Distance.Unite unite)
+{
+    // Enumération des unités de distance supportées
+    public enum Unite { am, fm, pm, A, nm, mu, mm, cm, inch, dm, ft, yd, m, km, mile, NM, ua, al, pc, mpc }
+
+    // Tableau statique pour les valeurs en mètres de chaque unité
+    private static readonly double[] UnitValues =
+    {
+        1E-18, // attomètre
+        1E-15, // femtomètre
+        1E-12, // picomètre
+        1E-10, // Angstrom
+        1E-9,  // nanomètre
+        1E-6,  // micromètre
+        1E-3,  // millimètre
+        0.01,  // centimètre
+        0.0254, // inch (pouce)
+        0.1,    // décimètre
+        0.3048, // pied
+        0.9144, // yard
+        1.0,    // mètre
+        1000,   // kilomètre
+        1609.344, // mille terrestre
+        1852,   // mille nautique
+        149597870700, // unité astronomique
+        9460730472580800, // année lumière
+        648000 / System.Math.PI * 149597870700, // parsec
+        648000 / System.Math.PI * 149597870700 * 1E6 // mégaparsec
+    };
+
+    // Propriétés de la distance et de l'unité
+    public double _value { init; get; } = value;
+    public Unite _unite { init; get; } = unite;
+
+    // Méthode privée pour obtenir la valeur en mètres d'une unité donnée
+    private double GetMeters(Unite unite)
+    {
+        return UnitValues[(int)unite];
+    }
+
+    // Méthode pour convertir la distance actuelle vers une autre unité
+    public Distance ConvertTo(Unite unite)
+    {
+        double v = _value * GetMeters(_unite) / GetMeters(unite);
+        return new Distance(v, unite);
+    }
+
+    // Méthode pour afficher la distance en texte
+    public override string ToString()
+    {
+        return _value + " " + _unite;
+    }
+}
