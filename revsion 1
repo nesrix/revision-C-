@@ -1,3 +1,10 @@
+// Namespace et Classe Distance
+namespace DistanceNS ; : Définit un espace de noms (namespace) DistanceNS pour organiser le code et éviter les conflits de noms.
+public sealed class Distance (double value, Distance.Unite unite) { ... } : Déclare une classe Distance, scellée (sealed), ce qui signifie qu’elle ne peut pas être héritée.
+La classe utilise un constructeur primaire qui reçoit deux paramètres (value et unite), initialisant les propriétés _value et _unite.
+Ces propriétés définissent respectivement la valeur numérique de la distance et son unité.
+
+
 namespace DistanceNS;
 
 public sealed class Distance(double value, Distance.Unite unite)
@@ -6,6 +13,7 @@ public sealed class Distance(double value, Distance.Unite unite)
     public enum Unite { am, fm, pm, A, nm, mu, mm, cm, inch, dm, ft, yd, m, km, mile, NM, ua, al, pc, mpc }
 
     // Tableau statique pour les valeurs en mètres de chaque unité
+    // qui associe chaque unite definie dans l'enumeration
     private static readonly double[] UnitValues =
     {
         1E-18, // attomètre
@@ -31,6 +39,8 @@ public sealed class Distance(double value, Distance.Unite unite)
     };
 
     // Propriétés de la distance et de l'unité
+//. Elles sont initialisées lors de la création de l’objet et ne peuvent pas être modifiées ensuite
+     (init et get).
     public double _value { init; get; } = value;
     public Unite _unite { init; get; } = unite;
 
@@ -53,3 +63,32 @@ public sealed class Distance(double value, Distance.Unite unite)
         return _value + " " + _unite;
     }
 }
+
+
+
+
+using DistanceNS;
+//using DistanceNS; : Permet d’accéder à la classe Distance sans devoir préciser le nom de l’espace DistanceNS.
+
+internal class Program
+{
+    public static void Main(string[] args)
+    {
+        Distance dist_1, dist_2; //Deux objets Distance sont créés.
+
+        // Initialisation de la distance avec 4,244 années-lumière
+        dist_1 = new Distance(4.244, Distance.Unite.al);
+        Console.WriteLine(dist_1); // Affiche 4,244 al
+
+        // Conversion en parsecs et affichage
+        dist_2 = dist_1.ConvertTo(Distance.Unite.pc);
+        Console.WriteLine(dist_2); // Affiche en parsecs
+
+        // Conversion en kilomètres et affichage
+        Console.WriteLine(dist_1.ConvertTo(Distance.Unite.km)); // Affiche en km
+
+        // Conversion en unités astronomiques et affichage
+        Console.WriteLine(dist_1.ConvertTo(Distance.Unite.ua)); // Affiche en unités astronomiques
+    }
+}
+
